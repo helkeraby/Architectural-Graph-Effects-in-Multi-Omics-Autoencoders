@@ -49,11 +49,22 @@ and STRING's own data use terms.
 | STRING PPI network | [string-db.org](https://string-db.org) | v11.0, combined confidence score ≥ 0.85 |
 | Clinical covariates and PAM50 labels | TCGA clinical portal | Used only for post-hoc evaluation, never for training |
 
-Several notebooks load STRING data from a pre-processed Kaggle dataset
-(`stringdb-preprocessed` — update if renamed/re-hosted). If
-rerunning outside Kaggle, regenerate this file from the raw STRING download
-using the mapping/thresholding procedure described in Section 2.2 of the
+The notebooks load two pre-processed datasets hosted on Kaggle. 
+
+| Dataset | Kaggle link | Used by | Derived from |
+|---|---|---|---|
+| TCGA-BRCA multi-omics (gene-level RNA-seq, CNV, methylation and mutation matrices, with associated clinical data) | [tcga-brca-multiomics](https://www.kaggle.com/datasets/habibaelkerabysqu/tcga-brca-multiomics) | Notebooks 01–10 | GDC Data Portal, accessed 01 February 2026 |
+| STRING PPI edges mapped to HGNC gene symbols | [stringdb-preprocessed](https://www.kaggle.com/datasets/habibaelkerabysqu/stringdb-preprocessed) | Notebooks 03–08 and 10 | STRING v11.0, combined confidence score ≥ 0.85 |
+
+Preprocessing steps (gene-universe definition, normalisation, methylation
+imputation, STRING mapping and thresholding) are described in Section 2 of the
 paper.
+
+**Paths.** Notebooks 01 and 02 mount the omics data at
+`/kaggle/input/tcga-brca-multiomics`, while the later notebooks use
+`/kaggle/input/datasets/<owner>/<dataset>/`. These refer to the same
+dataset. If you run the notebooks outside Kaggle, set the data directory in the
+configuration cell at the top of each notebook.
 
 ## Environment
 
@@ -144,6 +155,20 @@ k affects only the post-hoc clustering step.
 
 ### 10 — k-robustness sweep, GR-DAE (`10_ksweep_grdae.ipynb`)
 The same k-sweep procedure applied to the real-graph GR-DAE.
+
+## How the notebooks were used
+
+These notebooks are parameterised templates, not one-shot scripts. Each
+experimental condition in the paper was produced by setting the configuration
+values at the top of a notebook (for example `GRAPH_MODE`, `TIE_WEIGHTS`,
+`lambda_graph`, or `k`), running the full notebook, and saving the result. Where
+one notebook covers several conditions, it was run once per setting.
+
+The outputs stored in a notebook therefore reflect whichever configuration it
+was last run with, and are not necessarily the ones reported in the paper. The
+configuration for each reported condition is given in the notebook descriptions
+below. To reproduce a result, set the configuration accordingly and run the
+notebook from top to bottom.
 
 ## Contact
 Dr. Hamza Zidoum — zidoum@squ.edu.om
